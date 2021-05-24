@@ -16,11 +16,11 @@ tol = 10^(-5); %tolerance for convergence
 
 %physical parameters
 T = 0.5; %temperature; normalized by T_c
-phase = pi/2; %phase difference
+phase = 0.3; %phase difference
 gamma = 0.4; %Interface parameter
 
 %bridge dimensions
-S = 0.5; %center length;
+S = 1; %center length;
 L = 5;  %total strip length
 nS = n; %number of vertices in center
 nL = n; %number of vertices outside of center

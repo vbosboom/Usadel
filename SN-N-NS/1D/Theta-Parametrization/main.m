@@ -34,4 +34,3 @@ GI = GenerateGeometry1D(S,L,nS,nL,points);
 
 %Solve the Usadel equations for energy E
 [chi,theta,success] = RealEnergy(GI,points,weights,T,phase,E,gamma,maxit,tol,false);
-real(cos(theta(end)))
