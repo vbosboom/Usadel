@@ -1,0 +1,131 @@
+function [Currxs1,Currxs2,Currxf,Currys1,Currys2,Curryf,indx] = CalculateCurrent(GI,n_mats,phis1P,phis1CM,phis2P,phis2CM,phifP,phifCM,T,H,gamma,ksi)
+
+    %for the first superconductor
+    coefgradxs1m = zeros(length(GI.elmats1),n_mats);
+    coefgradys1m = zeros(length(GI.elmats1),n_mats);
+    coefs1m = zeros(length(GI.elmats1),n_mats);
+    Gs1m = zeros(length(GI.elmats1),n_mats);
+    coefgradxs1p = zeros(length(GI.elmats1),n_mats);
+    coefgradys1p = zeros(length(GI.elmats1),n_mats);
+    coefs1p = zeros(length(GI.elmats1),n_mats);
+    Gs1p = zeros(length(GI.elmats1),n_mats);
+    
+    xmids1 = zeros(length(GI.elmats1),1);
+    ymids1 = zeros(length(GI.elmats1),1);
+    
+    %calculate functions and gradients in center of elements
+    for i=1:length(GI.elmats1)
+        xmids1(i) = mean(GI.x(GI.elmats1(i,:)));
+        ymids1(i) = mean(GI.y(GI.elmats1(i,:)));
+        for index1 = 1:3
+            coefs1m(i,:) = coefs1m(i,:)+phis1CM(GI.convs1(GI.elmats1(i,index1)),:)*(GI.as1(i,index1)+GI.bs1(i,index1)*xmids1(i)+GI.cs1(i,index1)*ymids1(i));
+            coefs1p(i,:) = coefs1p(i,:)+phis1P(GI.convs1(GI.elmats1(i,index1)),:)*(GI.as1(i,index1)+GI.bs1(i,index1)*xmids1(i)+GI.cs1(i,index1)*ymids1(i));
+            coefgradxs1m(i,:) = coefgradxs1m(i,:)+phis1CM(GI.convs1(GI.elmats1(i,index1)),:)*GI.bs1(i,index1);
+            coefgradxs1p(i,:) = coefgradxs1p(i,:)+phis1P(GI.convs1(GI.elmats1(i,index1)),:)*GI.bs1(i,index1);
+            coefgradys1m(i,:) = coefgradys1m(i,:)+phis1CM(GI.convs1(GI.elmats1(i,index1)),:)*GI.cs1(i,index1);
+            coefgradys1p(i,:) = coefgradys1p(i,:)+phis1P(GI.convs1(GI.elmats1(i,index1)),:)*GI.cs1(i,index1);
+        end
+    end
+    
+    for i = 1:n_mats
+        omega = (2*i-1)*T;
+        Gs1m(:,i) = -omega./sqrt(omega^2+(conj(coefs1m(:,i))).*conj(coefs1p(:,i)));
+        Gs1p(:,i) = omega./sqrt(omega^2+(coefs1p(:,i)).*coefs1m(:,i));
+    end 
+    
+    omega = (2*(1:n_mats)-1)*T;
+    CurrFacResist = GI.s;
+    
+    Currxs1 = 1i/2*T*sum(Gs1p.^2./(omega.^2).*(coefs1p.*coefgradxs1m-coefs1m.*coefgradxs1p),2)*CurrFacResist;
+    Currxs1 = Currxs1+1i/2*T*sum(Gs1m.^2./(omega.^2).*(conj(coefs1m).*conj(coefgradxs1p)-conj(coefs1p).*conj(coefgradxs1m)),2)*CurrFacResist;
+    
+    Currys1 = 1i/2*T*sum(Gs1p.^2./(omega.^2).*(coefs1p.*coefgradys1m-coefs1m.*coefgradys1p),2)*CurrFacResist;
+    Currys1 = Currys1+1i/2*T*sum(Gs1m.^2./(omega.^2).*(conj(coefs1m).*conj(coefgradys1p)-conj(coefs1p).*conj(coefgradys1m)),2)*CurrFacResist;
+
+    %for the second superconductor
+    coefgradxs2m = zeros(length(GI.elmats2),n_mats);
+    coefgradys2m = zeros(length(GI.elmats2),n_mats);
+    coefs2m = zeros(length(GI.elmats2),n_mats);
+    Gs2m = zeros(length(GI.elmats2),n_mats);
+    coefgradxs2p = zeros(length(GI.elmats2),n_mats);
+    coefgradys2p = zeros(length(GI.elmats2),n_mats);
+    coefs2p = zeros(length(GI.elmats2),n_mats);
+    Gs2p = zeros(length(GI.elmats2),n_mats);
+    
+    xmids2 = zeros(length(GI.elmats2),1);
+    ymids2 = zeros(length(GI.elmats2),1);
+    for i=1:length(GI.elmats2)
+        xmids2(i) = mean(GI.x(GI.elmats2(i,:)));
+        ymids2(i) = mean(GI.y(GI.elmats2(i,:)));
+        for index1 = 1:3
+            coefs2m(i,:) = coefs2m(i,:)+phis2CM(GI.convs2(GI.elmats2(i,index1)),:)*(GI.as2(i,index1)+GI.bs2(i,index1)*xmids2(i)+GI.cs2(i,index1)*ymids2(i));
+            coefs2p(i,:) = coefs2p(i,:)+phis2P(GI.convs2(GI.elmats2(i,index1)),:)*(GI.as2(i,index1)+GI.bs2(i,index1)*xmids2(i)+GI.cs2(i,index1)*ymids2(i));
+            coefgradxs2m(i,:) = coefgradxs2m(i,:)+phis2CM(GI.convs2(GI.elmats2(i,index1)),:)*GI.bs2(i,index1);
+            coefgradxs2p(i,:) = coefgradxs2p(i,:)+phis2P(GI.convs2(GI.elmats2(i,index1)),:)*GI.bs2(i,index1);
+            coefgradys2m(i,:) = coefgradys2m(i,:)+phis2CM(GI.convs2(GI.elmats2(i,index1)),:)*GI.cs2(i,index1);
+            coefgradys2p(i,:) = coefgradys2p(i,:)+phis2P(GI.convs2(GI.elmats2(i,index1)),:)*GI.cs2(i,index1);
+        end
+    end
+    
+    for i = 1:n_mats
+        omega = (2*i-1)*T;
+        Gs2m(:,i) = -omega./sqrt(omega^2+(conj(coefs2m(:,i))).*conj(coefs2p(:,i)));
+        Gs2p(:,i) = omega./sqrt(omega^2+(coefs2p(:,i)).*coefs2m(:,i));
+    end 
+    
+    omega = (2*(1:n_mats)-1)*T;
+    CurrFacResist = GI.s;
+    
+    Currxs2 = 1i/2*T*sum(Gs2p.^2./(omega.^2).*(coefs2p.*coefgradxs2m-coefs2m.*coefgradxs2p),2)*CurrFacResist;
+    Currxs2 = Currxs2+1i/2*T*sum(Gs2m.^2./(omega.^2).*(conj(coefs2m).*conj(coefgradxs2p)-conj(coefs2p).*conj(coefgradxs2m)),2)*CurrFacResist;
+    
+    Currys2 = 1i/2*T*sum(Gs2p.^2./(omega.^2).*(coefs2p.*coefgradys2m-coefs2m.*coefgradys2p),2)*CurrFacResist;
+    Currys2 = Currys2+1i/2*T*sum(Gs2m.^2./(omega.^2).*(conj(coefs2m).*conj(coefgradys2p)-conj(coefs2p).*conj(coefgradys2m)),2)*CurrFacResist;
+
+    %for the normal metal
+    coefgradxnm = zeros(length(GI.elmatn),n_mats);
+    coefgradynm = zeros(length(GI.elmatn),n_mats);
+    coefnm = zeros(length(GI.elmatn),n_mats);
+    Gnm = zeros(length(GI.elmatn),n_mats);
+    coefgradxnp = zeros(length(GI.elmatn),n_mats);
+    coefgradynp = zeros(length(GI.elmatn),n_mats);
+    coefnp = zeros(length(GI.elmatn),n_mats);
+    Gnp = zeros(length(GI.elmatn),n_mats);
+    
+    xmidn = zeros(length(GI.elmatn),1);
+    ymidn = zeros(length(GI.elmatn),1);
+    
+    for i=1:length(GI.elmatn)
+        xmidn(i) = mean(GI.x(GI.elmatn(i,:)));
+        ymidn(i) = mean(GI.y(GI.elmatn(i,:)));
+        for index1 = 1:3
+           coefnm(i,:) = coefnm(i,:)+phifCM(GI.convn(GI.elmatn(i,index1)),:)*(GI.an(i,index1)+GI.bn(i,index1)*xmidn(i)+GI.cn(i,index1)*ymidn(i));
+           coefnp(i,:) = coefnp(i,:)+phifP(GI.convn(GI.elmatn(i,index1)),:)*(GI.an(i,index1)+GI.bn(i,index1)*xmidn(i)+GI.cn(i,index1)*ymidn(i));
+           coefgradxnm(i,:) = coefgradxnm(i,:)+phifCM(GI.convn(GI.elmatn(i,index1)),:)*GI.bn(i,index1);
+           coefgradxnp(i,:) = coefgradxnp(i,:)+phifP(GI.convn(GI.elmatn(i,index1)),:)*GI.bn(i,index1);
+           coefgradynm(i,:) = coefgradynm(i,:)+phifCM(GI.convn(GI.elmatn(i,index1)),:)*GI.cn(i,index1);
+           coefgradynp(i,:) = coefgradynp(i,:)+phifP(GI.convn(GI.elmatn(i,index1)),:)*GI.cn(i,index1);
+        end
+    end
+    
+    for i = 1:n_mats
+        omega = (2*i-1)*T;
+        omega_p = omega+1i*H;
+        omega_m = -omega+1i*H;
+        Gnm(:,i) = omega_m./sqrt(omega_m^2+(conj(coefnm(:,i))).*conj(coefnp(:,i)));
+        Gnp(:,i) = omega_p./sqrt(omega_p^2+(coefnp(:,i)).*coefnm(:,i));
+    end
+    
+    omega_p = (2*(1:n_mats)-1)*T+1i*H;
+    omega_m = -(2*(1:n_mats)-1)*T+1i*H;
+    
+    CurrFacResist = gamma/ksi*GI.s;
+    
+    Currxf = 1i/2*T*sum(Gnp.^2./(omega_p.^2).*(coefnp.*coefgradxnm-coefnm.*coefgradxnp),2)*CurrFacResist;
+    Currxf = Currxf+1i/2*T*sum(Gnm.^2./(omega_m.^2).*(conj(coefnm).*conj(coefgradxnp)-conj(coefnp).*conj(coefgradxnm)),2)*CurrFacResist;
+    
+    Curryf = 1i/2*T*sum(Gnp.^2./(omega_p.^2).*(coefnp.*coefgradynm-coefnm.*coefgradynp),2)*CurrFacResist;
+    Curryf = Curryf+1i/2*T*sum(Gnm.^2./(omega_m.^2).*(conj(coefnm).*conj(coefgradynp)-conj(coefnp).*conj(coefgradynm)),2)*CurrFacResist;
+    
+    [~,indx] = min(abs(xmidn-0).^2+abs(ymidn+GI.dn/2).^2);
+end

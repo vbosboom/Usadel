@@ -1,8 +1,8 @@
 %Solves the system of equations following from the finite element method
-%using the Picard method with line search parameter alpha
+%using the Picard method
 function [thetas1,chis1,thetas2,chis2,thetan,chin,success] = Picard(GI,points,weights,points1D,weights1D,phase,E,gamma_B,gamma,ksi,thetas1,chis1,thetas2,chis2,thetan,chin,deltas1,deltas2,Delta_0,itermax,tol)
     
-    %settings for the Newton method
+    %settings for the Picard method
     Diff = 10;
     iter = 0;
     success = true;
@@ -33,7 +33,7 @@ function [thetas1,chis1,thetas2,chis2,thetan,chin,success] = Picard(GI,points,we
         thetan = sol(2*(GI.ns1+GI.ns2)+1:2*(GI.ns1+GI.ns2)+GI.nn);
         chin = sol(2*(GI.ns1+GI.ns2)+GI.nn+1:end);
 
-        %test if norm of h is sufficiently low
+        %test if norm of Green's function converges
         Diff = norm(thetas1-thetas1old);
         iter = iter+1;
         Difference(iter) = Diff;
