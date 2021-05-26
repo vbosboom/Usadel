@@ -18,5 +18,5 @@ function [thetas1,chis1,thetas2,chis2,thetan,chin,success] = RealEnergy(GI,point
     end
     
     %calculate solution using the Newton method
-    [thetas1,chis1,thetas2,chis2,thetan,chin,success] = Newton(GI,points,weights,points1D,weights1D,phase,E,gamma_B,gamma,ksi,thetas1,chis1,thetas2,chis2,thetan,chin,deltas1,deltas2,Delta_0,itermax,tol);
+    [thetas1,chis1,thetas2,chis2,thetan,chin,success] = Picard(GI,points,weights,points1D,weights1D,phase,E,gamma_B,gamma,ksi,thetas1,chis1,thetas2,chis2,thetan,chin,deltas1,deltas2,Delta_0,itermax,tol);
 end
