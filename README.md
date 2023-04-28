@@ -1,9 +1,6 @@
-This repository contains code to solve the normalized Usadel equations
-
-\begin{align*}
-    &-\nabla\cdot\left(\hat{G}\nabla\hat{G}\right) + \left[\hat{\tau}^3E+i\hat{\Delta},\hat{G}\right] = 0,\\
-    &\Delta\text{ln}(t) +t\sum_{n=-\infty}^\infty\left(\frac{\Delta}{\omega_n}-F_1(\omega_n,\mathbf{r})\right)
-\end{align*}
+This repository contains code to solve the normalized Usadel equations 
+$$-\nabla\cdot\left(\hat{G}\nabla\hat{G}\right) + \left[\hat{\tau}^3E+i\hat{\Delta},\hat{G}\right] = 0,$$
+$$\Delta\text{ln}(t) +t\sum_{n=-\infty}^\infty\left(\frac{\Delta}{\omega_n}-F_1(\omega_n,\mathbf{r})\right)$$
 For the full theoretical framework underlying the code we refer to (https://essay.utwente.nl/86403/).
 
 The code can be run using the program Matlab and requires installation of the partial differential equations toolbox, the optimization toolbox and the symbolic math toolbox.
