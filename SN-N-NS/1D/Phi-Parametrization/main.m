@@ -4,9 +4,12 @@ clear all
 
 %add general functions folder to path
 mydir = pwd;
-idcs = strfind(mydir,'\');
+sep = ['\','/'];
+sepindx = contains(mydir,sep(2));
+idcs = strfind(mydir,sep(sepindx+1));
 GenPath = mydir(1:idcs(end-2)-1);
-addpath(strcat(GenPath,'\General'));
+GenEnd = strcat(sep(sepindx+1),'General');
+addpath(strcat(GenPath,GenEnd));
 
 %computational parameters
 n=500; %number of nodes in the S and L layers
@@ -35,5 +38,11 @@ GI = GenerateGeometry1D(S,L,nS,nL,points);
 %solve the Usadel equations
 phin = SolveUsadel(GI,weights,T,gamma,phase,n_mats,maxit,tol);
 
-%calculate the supercurrent trough the junction
+%calculate the supercurrent trough the metal layer
 Curr = CalculateCurrent(GI,n_mats,phin,T);
+
+%plot the current density in the metal layer
+plot(GI.x,Curr)
+xlabel('x/\xi_N')
+ylabel('eI_cR_N/2\piT_c')
+title('Current density')

@@ -1,5 +1,5 @@
-%Generate the geometry information datastructure (GI) contain information about
-%the finite element mesh and basis functions
+%Generate the geometry information datastructure (GI) containing information about
+%the finite element mesh and linear basis functions on this mesh
 
 function GI = GenerateGeometry1D(S,L,nS,nL,points)
     %make the empty datastructure

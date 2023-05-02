@@ -1,4 +1,4 @@
-%Calculate basis function data for all triangular elements
+%Calculate linear basis function data for all triangular elements in FEM grid
 function GI = CalculateElementData(GI)
     
     %geometry data of the first superconductor

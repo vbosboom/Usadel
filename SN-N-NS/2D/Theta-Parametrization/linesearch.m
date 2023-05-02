@@ -1,3 +1,5 @@
+%Performs line search on the descent direction pk to find the optimal step
+%size alpha
 function alpha = linesearch(alpha_step,n_alpha,pk,f0,GI,points,weights,points1D,weights1D,E,gamma_B,gamma,phase,ksi,Delta_0,thetas1,chis1,thetas2,chis2,thetan,chin,deltas1,deltas2)
 %initial choice of alpha;
 alphalist = [];
@@ -28,7 +30,7 @@ while n<n_alpha
     chin = chin_old-alphalist(end)*pk(2*(GI.ns1+GI.ns2)+GI.nn+1:end);
 
     %determine new objective function value
-    [S11,S21,f11,f21,f31,f41,fB11,fB21,S12,S22,f12,f22,f32,f42,fB12,fB22,S1n,S2n,f1n,f2n,fB1n,fB2n] = BuildVecMatricesandVectors(GI,points,weights,points1D,weights1D,gamma_B,gamma,E,ksi,thetas1,chis1,thetas2,chis2,thetan,chin,deltas1,deltas2);
+    [S11,S21,f11,f21,f31,f41,fB11,fB21,S12,S22,f12,f22,f32,f42,fB12,fB22,S1n,S2n,f1n,f2n,fB1n,fB2n] = BuildMatricesandVectors(GI,points,weights,points1D,weights1D,gamma_B,gamma,E,ksi,thetas1,chis1,thetas2,chis2,thetan,chin,deltas1,deltas2);
     Stot = blkdiag(S11,S21,S12,S22,S1n,S2n);
     ftot = [f11+f21+f31+fB11;f41+fB21;f12+f22+f32+fB12;f42+fB22;f1n+f2n+fB1n;fB2n];
     [~,Stot,ftot] = ProcessEssentialBoundaryConditions(sparse(2*(GI.ns1+GI.ns2+GI.nn),2*(GI.ns1+GI.ns2+GI.nn)),Stot,ftot,GI,phase,Delta_0,E);

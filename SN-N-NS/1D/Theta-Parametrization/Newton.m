@@ -1,6 +1,8 @@
-%solves the nonlinear system from FEM using the Newton method
-function [chi,theta,success] = Newton(GI,points,weights,phase,E,gamma,chi,theta,Delta_0,maxit,tol)
-    success = true; %Does the Newton method converge?
+%solves the nonlinear matrix equation from the 1D-Usadel equations in the
+%theta,chi-parametrization using the Newton method
+function [chi,theta,success] = Newton(GI,weights,phase,E,gamma,chi,theta,Delta_0,maxit,tol)
+    
+    success = true; %Indicator of convergence of the method
     
     %iteration parameters
     Diff = 10;
@@ -23,17 +25,21 @@ function [chi,theta,success] = Newton(GI,points,weights,phase,E,gamma,chi,theta,
         
         Jac = [Jactheta1,Jacchi1; Jactheta2,Jacchi2];
         h = [S1*theta-f1tot; S2*chi-f2tot];
-                
-        %find correct Newton direction and stepsize
+               
         pk = Jac\h; %descent direction
-        %apply linesearch
+
+        %Apply linesearch to find descent step size
         alpha = linesearch(0.5,10,pk,norm(h),theta,chi,GI,weights,E,gamma,phase,Delta_0);
         
+        %update the Greens functions
         theta = theta-alpha*pk(1:GI.ntot);
         chi = chi-alpha*pk(GI.ntot+1:end);
         
         Diff = norm(h);
         iter = iter+1;
-        Difference(iter) = Diff;
+    end
+
+    if (iter==maxit && Diff>tol)
+        success = false; %Newton method has not converged
     end
 end

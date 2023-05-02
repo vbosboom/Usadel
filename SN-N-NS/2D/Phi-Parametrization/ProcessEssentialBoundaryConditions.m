@@ -1,3 +1,5 @@
+%Modify the nonlinear sytem of matrices to take into account the bulk 
+%boundary conditions at the edges of the S layers
 function [S1tot,f1,S2tot,f2] = ProcessEssentialBoundaryConditions(GI,S1tot,f1,S2tot,f2,phase,Delta_0)
     
     %Essential boundary conditions for S1

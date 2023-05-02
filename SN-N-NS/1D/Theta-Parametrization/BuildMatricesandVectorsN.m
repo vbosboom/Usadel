@@ -1,8 +1,8 @@
-%Procedure for efficient calculation of element matrices,vectors and 
-%jacobians in the Usadel weak formulation
+%Procedure for calculation of element matrices,vectors and jacobians in the
+%1D Usadel weak formulation using the theta,chi-parametrization
 function [S1,f1,f2,f3,S2,f4,JS21,Jf11,Jf12,Jf21,Jf31,Jf32,Jf41,Jf42] = BuildMatricesandVectorsN(GI,weights,phase,E,gamma,chi,theta,Delta_0)
     
-    %initialize matrices, vectors and jacobians
+    %Initialize matrices, vectors and jacobians
     n = GI.ntot;
     S1 = sparse(n,n);
     S2 = sparse(n,n);
@@ -22,20 +22,23 @@ function [S1,f1,f2,f3,S2,f4,JS21,Jf11,Jf12,Jf21,Jf31,Jf32,Jf41,Jf42] = BuildMatr
     f4 = zeros(n,1);
     
     
-    %calculate basis function data
+    %Calculate basis function and material data
     Gammainv = 1/gamma*(mean(GI.x(GI.elmat),2)>GI.S/2 | mean(GI.x(GI.elmat),2)<-GI.S/2); %1/gamma only in L region
     GradPhi = GI.PhiBgradS'+(GI.PhiBgradL'-GI.PhiBgradS').*(mean(GI.x(GI.elmat),2)>GI.S/2 | mean(GI.x(GI.elmat),2)<-GI.S/2); %basis function gradients
     h = GI.hS+(GI.hL-GI.hS)*(mean(GI.x(GI.elmat),2)>GI.S/2 | mean(GI.x(GI.elmat),2)<-GI.S/2);
+    
     %initialize function values at quadrature points in each element
     Theta = (theta(GI.elmat)*GI.PhiBS);
     Chi = (chi(GI.elmat)*GI.PhiBS);
     ChiGrad = sum(chi(GI.elmat).*GradPhi,2);    
     
+    %loop for building the matrices and vectors
     for ind1 = 1:GI.topology
-        [f1elem,f2elem,f3elem,f4elem] = GenerateVecElementVector(GI,weights,E,Theta,Chi,Gammainv,ChiGrad,h,Delta_0,phase,ind1);
+        [f1elem,f2elem,f3elem,f4elem] = GenerateElementVector(GI,weights,E,Theta,Chi,Gammainv,ChiGrad,h,Delta_0,phase,ind1);
         for ind2 = 1:GI.topology
             [S1elem,S2elem,JS21elem,Jf11elem,Jf12elem,Jf21elem,Jf31elem,Jf32elem,Jf41elem,Jf42elem]...
-                =GenerateVecElementMatrixN(GI,weights,E,Theta,Chi,Gammainv,GradPhi,ChiGrad,h,Delta_0,phase,ind1,ind2);
+                =GenerateElementMatrixN(GI,weights,E,Theta,Chi,Gammainv,GradPhi,ChiGrad,h,Delta_0,phase,ind1,ind2);
+            
             S1 = S1+sparse(GI.elmat(:,ind1)',GI.elmat(:,ind2)',S1elem,n,n);
             S2 = S2+sparse(GI.elmat(:,ind1)',GI.elmat(:,ind2)',S2elem,n,n);
             JS21 = JS21+sparse(GI.elmat(:,ind1)',GI.elmat(:,ind2)',JS21elem,n,n);

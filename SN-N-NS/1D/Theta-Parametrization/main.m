@@ -4,9 +4,12 @@ clear all
 
 %add general functions folder to path
 mydir = pwd;
-idcs = strfind(mydir,'\');
+sep = ['\','/'];
+sepindx = contains(mydir,sep(2));
+idcs = strfind(mydir,sep(sepindx+1));
 GenPath = mydir(1:idcs(end-2)-1);
-addpath(strcat(GenPath,'\General'));
+GenEnd = strcat(sep(sepindx+1),'General');
+addpath(strcat(GenPath,GenEnd));
 
 %computational parameters
 n=500; %number of nodes in the S and L layers
@@ -33,4 +36,10 @@ points = [0;1/3*sqrt(5-2*sqrt(10/7));-1/3*sqrt(5-2*sqrt(10/7));1/3*sqrt(5+2*sqrt
 GI = GenerateGeometry1D(S,L,nS,nL,points);
 
 %Solve the Usadel equations for energy E
-[chi,theta,success] = RealEnergy(GI,points,weights,T,phase,E,gamma,maxit,tol,false);
+[chi,theta,success] = RealEnergy(GI,weights,T,phase,E,gamma,maxit,tol,false);
+
+%Plot the density of states in the junction
+plot(GI.x,real(cos(theta)))
+xlabel('x/\xi_N')
+ylabel('N(E)/N_0')
+title('Density of states')

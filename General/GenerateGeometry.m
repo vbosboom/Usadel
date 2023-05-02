@@ -1,10 +1,10 @@
-%Generate the geometry information datastructure (GI) contain information about
-%the finite element mesh and basis functions
+%Generate the geometry information datastructure (GI) containing information about
+%the finite element mesh and linear basis functions on this mesh
 function GI = GenerateGeometry(s,l,dn,ds,minvert,refineCenter)
     %make the empty datastructure
     GI = struct;
     
-    %define the finite element mesh for the bridge
+    %define the finite element mesh for the bridge geometry
     poly1 = [3;4;-l/2;-s/2;-s/2;-l/2;ds;ds;0;0];
     poly2 = [3;4;s/2;l/2;l/2;s/2;ds;ds;0;0];
     poly3 = [3;4;-l/2;l/2;l/2;-l/2;0;0;-dn;-dn];

@@ -2,7 +2,7 @@ function [phiP,phiCM] = SolveUsadel(GI,weights,T,gamma,H,phase,n_mats,maxit,tol,
     
     Delta_0 = BCSGap(T); %BCS Energy gap
     
-    %initial guesses used in iteration method
+    %Initial guesses used in iteration method
     if useprev==false
         phiP = Delta_0*ones(GI.ntot,n_mats);
         phiCM = Delta_0*ones(GI.ntot,n_mats);

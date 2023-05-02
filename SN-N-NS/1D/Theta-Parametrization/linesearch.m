@@ -1,3 +1,5 @@
+%Performs line search on the descent direction pk to find the optimal step
+%size alpha
 function alpha = linesearch(alpha_step,n_alpha,pk,f0,theta,chi,GI,weights,E,gamma,phase,Delta_0)
 
 %initial choice of alpha;

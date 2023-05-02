@@ -1,3 +1,5 @@
+%Procedure to solve the self consistency equation and calculate the energy
+%gap Delta using Anderson acceleration
 function [deltas1,deltas2,fs1,gs1,Fs1,Gs1,fs2,gs2,Fs2,Gs2] = DeltaIteration(deltas1,deltas2,Sumfs1,Sumfs2,SumOmega,T,iter2,fs1,gs1,Fs1,Gs1,fs2,gs2,Fs2,Gs2,M)
     if iter2==0
         gs1(:,end) = (2*T*Sumfs1)./(log(T)+2*T*SumOmega);

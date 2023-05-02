@@ -1,7 +1,8 @@
 %Calculate the supercurrent through the N layer using the solution of the
-%Usadel equations
+%Usadel equations in the phi-parametrization
 function Curr = CalculateCurrent(GI,n_mats,phi,T)
-    %calculate the gradient of the solution
+
+    %Approximates the gradient of the solution
     phigrad = zeros(GI.ntot,n_mats);
     for i=2:GI.nL-1
         phigrad(i,:) = (phi(i+1,:)-phi(i-1,:))/(2*GI.hL);
@@ -12,6 +13,7 @@ function Curr = CalculateCurrent(GI,n_mats,phi,T)
     for i=GI.nL+GI.nS:GI.ntot-1
         phigrad(i,:) = (phi(i+1,:)-phi(i-1,:))/(2*GI.hL);
     end
+
     %special treatment for gradient at center and at superconductor edge
     phigrad(1,:) = (phi(2,:)-phi(1,:))/(GI.hL);
     phigrad(GI.nL,:) = (phi(GI.nL+1,:)-phi(GI.nL,:))/(GI.hS);

@@ -1,5 +1,7 @@
+%Compute the Jacobians obtained in the weak formulation of the 2D Usadel 
+%equation in the theta,chi-parametrization on the SN boundary
 function [JfB11T1elem,JfB11C1elem,JfB11T2elem,JfB11C2elem,JfB21T1elem,JfB21C1elem,JfB21T2elem,JfB21C2elem, ...
-            JfB1nT1elem,JfB1nC1elem,JfB1nT2elem,JfB1nC2elem,JfB2nT1elem,JfB2nC1elem,JfB2nT2elem,JfB2nC2elem] = GenerateVecBoundaryElementMatrixSN(points1D,weights1D,gamma_B,gamma,ksi,lek,ThetaS,ChiS,ThetaN,ChiN,ind1,ind2)
+            JfB1nT1elem,JfB1nC1elem,JfB1nT2elem,JfB1nC2elem,JfB2nT1elem,JfB2nC1elem,JfB2nT2elem,JfB2nC2elem] = GenerateBoundaryElementMatrixSN(points1D,weights1D,gamma_B,gamma,ksi,lek,ThetaS,ChiS,ThetaN,ChiN,ind1,ind2)
     
     Phi1 = GeneratePhi(points1D,ind1)';
     Phi2 = GeneratePhi(points1D,ind2)';

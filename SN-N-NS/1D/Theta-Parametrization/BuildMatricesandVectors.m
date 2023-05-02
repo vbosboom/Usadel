@@ -22,9 +22,9 @@ function [S1,f1,f2,f3,S2,f4] = BuildMatricesandVectors(GI,weights,phase,E,gamma,
     ChiGrad = sum(chi(GI.elmat).*GradPhi,2);  
     
     for ind1 = 1:GI.topology
-        [f1elem,f2elem,f3elem,f4elem] = GenerateVecElementVector(GI,weights,E,Theta,Chi,Gammainv,ChiGrad,h,Delta_0,phase,ind1);
+        [f1elem,f2elem,f3elem,f4elem] = GenerateElementVector(GI,weights,E,Theta,Chi,Gammainv,ChiGrad,h,Delta_0,phase,ind1);
         for ind2 = 1:GI.topology
-            [S1elem,S2elem] = GenerateVecElementMatrix(weights,Theta,GradPhi,h,ind1,ind2);
+            [S1elem,S2elem] = GenerateElementMatrix(weights,Theta,GradPhi,h,ind1,ind2);
             S1 = S1+sparse(GI.elmat(:,ind1)',GI.elmat(:,ind2)',S1elem,n,n);
             S2 = S2+sparse(GI.elmat(:,ind1)',GI.elmat(:,ind2)',S2elem,n,n);
         end

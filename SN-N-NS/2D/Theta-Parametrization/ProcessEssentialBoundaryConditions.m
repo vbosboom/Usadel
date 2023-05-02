@@ -1,4 +1,7 @@
+%Modify the nonlinear sytem of matrices to take into account the bulk 
+%boundary conditions at the edges of the S layers
 function [Jac,Stot,ftot] = ProcessEssentialBoundaryConditions(Jac,Stot,ftot,GI,phase,Delta_0,E )
+    
     %boundary conditions for S1
     for i = 1:length(GI.ess_bc_index_s1)
         k = GI.convs1(GI.ess_bc_index_s1(i));

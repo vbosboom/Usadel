@@ -1,5 +1,5 @@
-%Generates gradient of a first order Lagrangian basis function on an
-%element with length h.
+%Evalutes the gradient of the two linear basis function on a
+%1D element with length h.
 function sol = GeneratePhiGrad1D(h)
     sol(1,1) = -1/h;
     sol(2,1) = 1/h;
